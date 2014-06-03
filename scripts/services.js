@@ -53,12 +53,11 @@ employeeServices.service('Employee',['$resource',function($resource) {
     }
 
      this.save = function (employee) {
-        if (employee.id == null) {
-            //if this is new contact, add it in contacts array
+        if (employee.id == null) {  //add employee - not implemented
             employee.id = Math.random();
-            employees.push(contact);
+            employees.push(employee);
         } else {
-            //for existing contact, find this contact using id
+            //for existing employee, find this employee using id
             //and update it.
             for (i in employees) {
                 if (employees[i].id == employee.id) {
