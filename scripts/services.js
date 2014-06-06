@@ -23,15 +23,25 @@ var employeeServices = angular.module("employeeServices", ['ngResource']);
 // }]);
 
 
-employeeServices.service('Employee',['$resource',function($resource) { 
+employeeServices.service('Employee',['$resource', '$http',function($resource, $http) { 
 	var employees = [];
-	 var empResource = $resource('json/employees.json', {});
-		//{query : {method : 'GET', isArray : true}});
 	//var empResource = $resource('json/employees.json', {});
+		//{query : {method : 'GET', isArray : true}});
+	var empResource = $resource('http://localhost:8000/:path');
 
 	this.list = function(){
-		 if(employees.length == 0)
-		 employees =  empResource.query();
+
+    //    $http({
+    // url: 'http://localhost/EmployeeServer/index.php',
+    // method: "POST",
+    // data: {'test' : testval}
+    // }).success(function (data, status, headers, config) {
+    //     console.log(data);
+
+    // }).error(function (data, status, headers, config) {});
+        //delRsr.$save()
+		 //if(employees.length == 0)
+		 employees =  empResource.query({path : "list"});
 		 return employees;
 	};
 
@@ -45,11 +55,14 @@ employeeServices.service('Employee',['$resource',function($resource) {
 	}
 
 	this.delete = function (eid) {
-        for (i in employees) {
-            if (employees[i].id == eid) {
-                employees.splice(i, 1);
-            }
-        }
+         var delRsr = new empResource();
+        delRsr.empId = eid;
+        delRsr.$save({path: "delete"});
+        // for (i in employees) {
+        //     if (employees[i].id == eid) {
+        //         employees.splice(i, 1);
+        //     }
+        // }
     }
 
      this.save = function (employee) {
