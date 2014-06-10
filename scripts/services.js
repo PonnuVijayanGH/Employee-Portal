@@ -1,85 +1,55 @@
-var employeeServices = angular.module("employeeServices", ['ngResource']);
-// employeeServices.factory('Employee',['$http',function() {   - usage of factory
-// 	var factory = {};
-// 	factory.list = function($http)	{
-// 		$http.get('json/employees.json').success(function(data){
-// 			employees = data;
-// 			return employees;
-// 		};
-// 		return factory;
-// }]);
-
-// employeeServices.service('Employee',['$http',function($http) { //- usage of simple service with http
-// 	this.list = function()	{
-// 		$http.get('json/employees.json').success(function(d){
-// 			employees.length = 0;
-// 		      for(var i = 0; i < d.length; i++){
-// 		        employees.push(d[i]);
-// 		      }
-// 		});
-// 		return employees;
-// 	};
-
-// }]);
-
-
-employeeServices.service('Employee',['$resource', '$http',function($resource, $http) { 
-	var employees = [];
-	//var empResource = $resource('json/employees.json', {});
-		//{query : {method : 'GET', isArray : true}});
-	var empResource = $resource('http://localhost:8000/:path');
-
-	this.list = function(){
-
-    //    $http({
-    // url: 'http://localhost/EmployeeServer/index.php',
-    // method: "POST",
-    // data: {'test' : testval}
-    // }).success(function (data, status, headers, config) {
-    //     console.log(data);
-
-    // }).error(function (data, status, headers, config) {});
-        //delRsr.$save()
-		 //if(employees.length == 0)
-		 employees =  empResource.query({path : "list"});
-		 return employees;
+var employeeServices = angular.module("employeeServices", []);
+employeeServices.service('Employee',['$http','$q',function($http, $q) {
+var url = 'http://localhost:8000/';
+var employees = [];
+this.callWebService = function(httpMethod, url, action, params, data){
+		var deferred = $q.defer();
+		if(typeof params == "undefined"){
+			params = "";
+		}
+		
+		//Sample params {params:{fname: "fname", lname: "lname"}}
+		var httpDict = {};
+ 		httpDict.url = url + action;
+ 		httpDict.method = httpMethod;
+ 		if(httpMethod == 'GET' || httpMethod == 'DELETE'){
+ 			httpDict.params = params;
+ 		}
+ 		else if(httpMethod == 'POST' || httpMethod == 'PUT'){
+ 			httpDict.data = params;
+  		};
+ 	 			
+		$http(httpDict).success(function(response, status) {
+	    	deferred.resolve(response);
+		}).error(function(errors, status) {
+			// please note the type of error expecting is array
+			// so form error as array if you modifying it
+			if(status == 406){ // 406- Network error
+				deferred.reject(errors);
+			}
+			else if(status == 500){ // 500- Internal Server Error
+				deferred.reject(['Internal server error occured']);
+			}
+			else if(status == 401){ // 401- Unauthorized
+				console.log('lets redirect');
+				// so lets redirect to login page
+			}else{
+				deferred.reject(errors);
+			}
+		    
+		});
+		return deferred.promise;	    	
 	};
 
-	this.getDetail = function(eid) {
-		// return empResource.get({id:eid});
-        for (i in employees) {
-            if (employees[i].id == eid) {
-                return employees[i];
-            }
-        }
-	}
-
-	this.delete = function (eid) {
-         var delRsr = new empResource();
-        delRsr.empId = eid;
-        delRsr.$save({path: "delete"});
-        // for (i in employees) {
-        //     if (employees[i].id == eid) {
-        //         employees.splice(i, 1);
-        //     }
-        // }
-    }
-
-     this.save = function (employee) {
-        if (employee.id == null) {  //add employee - not implemented
-            employee.id = Math.random();
-            employees.push(employee);
-        } else {
-            //for existing employee, find this employee using id
-            //and update it.
-            for (i in employees) {
-                if (employees[i].id == employee.id) {
-                    employees[i] = employee;
-                }
-            }
-        }
- 
-    }
-
+   	this.list = function() {
+    	return this.callWebService("GET", url, "list");
+   	};
     
+    
+   	this.delete = function(eid) {
+   		var reqObj = {};
+   		reqObj.empId = eid;
+   		return this.callWebService("POST", url, "delete", reqObj);
+   	};
+   
 }]);
