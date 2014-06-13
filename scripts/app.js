@@ -8,7 +8,7 @@ empApp.config(['$routeProvider','$httpProvider',
 		}).
 		when('/home/:eid',{
 			templateUrl : 'partials/EmployeeDetail.html',
-			controller : 'EmployeeDetailContrl'
+			controller : 'EmployeeListContrl'
 		}).
 		when('/manage',{
 			templateUrl : 'partials/EmployeeList.html',
@@ -16,7 +16,11 @@ empApp.config(['$routeProvider','$httpProvider',
 		}).
 		when('/manage/:eid',{
 			templateUrl : 'partials/EditEmployeeDetail.html',
-			controller : 'EmployeeDetailContrl'
+			controller : 'EmployeeListContrl'
+		}).
+		when('/manage/add',{
+			templateUrl : 'partials/AddEmployee.html',
+			controller : 'EmployeeListContrl'
 		}).
 		otherwise({
 			redirectTo : '/home'

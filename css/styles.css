@@ -49,11 +49,15 @@ footer {
 }
 #srchDiv {
 	overflow: auto;
+	padding-left: 10px;
 }
 #srchDiv p {
 	float: right;
 }
 
+#srchDiv a {
+
+}
 #listDiv ul{
 	padding-left: 0px;
 }
@@ -128,4 +132,8 @@ footer {
 
 #projDiv h4{
 	color: blue
+}
+
+#srchDiv #rtAlign {
+	float: left;
 }
