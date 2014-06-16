@@ -1,6 +1,6 @@
 <div>
 	<div id="srchDiv">
-		<p id="rtAlign" ng-show="loc=='/manage'" class="ng-hide"><a href = '#/manage/add'>Add</a></p>
+		<p id="rtAlign" ng-show="loc=='/manage'" class="ng-hide"><a href = '#/add'>Add</a></p>
 		<p>Search : <input ng-model= "srchTxt"></p>
 		<p>Sort : 
 			<select ng-model="srtVal">
@@ -16,14 +16,14 @@
 					<img ng-src="{{'images/icon/'+employee.image}}">
 				</div>
 				<div id="contDiv">
-					<p><a href="#/home/{{employee.id}}">{{employee.name}}</a></p>
+					<p><a href="#/home/{{employee._id}}">{{employee.name}}</a></p>
 					<p>{{employee.designation}}</p>
-					<p>{{employee.email}}</p>
-					<p>{{employee.phone}}</p>
+					<p>{{getVal(employee.contactInfo,'Email')}}</p>
+					<p>{{getVal(employee.contactInfo,'Phone')}}</p>
 				</div>
 				<div id="manageCont" ng-show="loc=='/manage'" class="ng-hide">
-					<a href="#/manage/{{employee.id}}">Edit</a>
-					<a href="" ng-click="deleteEmp(employee.id)">Delete</a>
+					<a href="#/manage/{{employee._id}}">Edit</a>
+					<a href="" ng-click="deleteEmp(employee._id)">Delete</a>
 				</div>
 			</li>
 		</ul>

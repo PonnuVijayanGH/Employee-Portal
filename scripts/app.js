@@ -18,7 +18,7 @@ empApp.config(['$routeProvider','$httpProvider',
 			templateUrl : 'partials/EditEmployeeDetail.html',
 			controller : 'EmployeeListContrl'
 		}).
-		when('/manage/add',{
+		when('/add',{
 			templateUrl : 'partials/AddEmployee.html',
 			controller : 'EmployeeListContrl'
 		}).

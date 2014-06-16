@@ -55,6 +55,10 @@ employeeServices.service('Employee',['$http','$q',function($http, $q) {
 	   this.save = function (employee) {
 	   		return this.callWebService("POST", url, "save",employee);
 	   }	
+
+	   this.add = function (employee) {
+	   		return this.callWebService("POST", url, "add",employee);
+	   }
    
 }]);
 
