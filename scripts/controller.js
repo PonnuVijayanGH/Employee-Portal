@@ -4,24 +4,32 @@ var employeesCopy = null;
 
 employeePortalControllers.controller('EmployeeListContrl',['$scope', 'Employee','$location','$routeParams',
 	 function($scope,Employee,$location, $routeParams)	{
-
+		$scope.newEmployee = initEmp();
+		$scope.loc = $location.path();
+		$scope.srtVal = "date";
+		$scope.isValid = true;
 		getEmployees();
 		
 		if($routeParams.eid != null && employeesCopy != null) {
 			$scope.employee = getDetail($routeParams.eid);
 		}
 
-
-		$scope.newEmployee = initEmp();
-		$scope.loc = $location.path();
-		$scope.srtVal = "date";
-		 $scope.deleteEmp = function (eid) {
-		 	Employee.delete(eid).then(function(data){
-		 		//success
-		 		getEmployees();
-		 	}, function(){
-		 		//failure
-		 	});
+		$scope.deleteEmp = function (eid) {
+			// confirm dialog
+			alertify.confirm("Are you sure you want to delete this employee?", function (e) {
+			    if (e) {
+			        // user clicked "ok"
+			        Employee.delete(eid).then(function(data){
+				 		//success
+				 		getEmployees();
+				 	}, function(){
+				 		//failure
+				 	});
+			    } else {
+			        // user clicked "cancel"
+			    }
+			});
+			
 		 }
 
     	$scope.cancel = function() {
@@ -44,13 +52,15 @@ employeePortalControllers.controller('EmployeeListContrl',['$scope', 'Employee',
 		}
 
 		$scope.add = function(nEmployee) {
-			Employee.add(nEmployee).then(function(data){
-				getEmployees();
-			}, function(){
+			$scope.isValid = validate(nEmployee);
+			if($scope.isValid) {
+				Employee.add(nEmployee).then(function(data){
+					getEmployees();
+				}, function(){
 
-			});
-
-			$location.path('/manage');
+				});
+				$location.path('/manage');
+			}
 		}
 
 		$scope.getVal = function (arr, val) {
@@ -80,7 +90,9 @@ employeePortalControllers.controller('EmployeeListContrl',['$scope', 'Employee',
     	}
 
     	
-
+    	function validate(employee) {
+    		return employee.name.length > 0;
+    	}
     	function initEmp() {
     		var emp = {};
     		emp = {

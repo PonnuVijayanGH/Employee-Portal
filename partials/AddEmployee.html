@@ -2,7 +2,8 @@
 	<div id="detCont">
 		<img ng-src="{{'images/main/'+newEmployee.image}}">
 		<div>
-			<input type="text" ng-model="newEmployee.name" placeholder="Name">
+			<input type="text" ng-model="newEmployee.name" placeholder="Name"
+			ng-class="{normal : isValid, red : !isValid}">
 			<br/><input type="text" ng-model="newEmployee.date" placeholder = "Joining Date">
 			<br/>
 			<input type="text" ng-model="newEmployee.designation" placeholder = "Designation">

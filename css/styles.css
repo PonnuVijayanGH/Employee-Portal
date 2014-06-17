@@ -137,3 +137,13 @@ footer {
 #srchDiv #rtAlign {
 	float: left;
 }
+
+.default {
+	border-style:solid;
+	border-color:#e2e3ea;
+}
+
+.red {
+	border-style:solid;
+	border-color:red;
+}
