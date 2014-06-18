@@ -1,18 +1,12 @@
 var employeePortalControllers = angular.module('employeePortalControllers',[]);
-var employeesMain;
 var employeesCopy = null;
 
-employeePortalControllers.controller('EmployeeListContrl',['$scope', 'Employee','$location','$routeParams',
-	 function($scope,Employee,$location, $routeParams)	{
-		$scope.newEmployee = initEmp();
+employeePortalControllers.controller('EmployeeListContrl',['$scope', 'Employee','$location',
+	 function($scope,Employee,$location)	{
 		$scope.loc = $location.path();
 		$scope.srtVal = "date";
-		$scope.isValid = true;
 		getEmployees();
-		
-		if($routeParams.eid != null && employeesCopy != null) {
-			$scope.employee = getDetail($routeParams.eid);
-		}
+		console.log("In controller");
 
 		$scope.deleteEmp = function (eid) {
 			// confirm dialog
@@ -32,9 +26,33 @@ employeePortalControllers.controller('EmployeeListContrl',['$scope', 'Employee',
 			
 		 }
 
-    	$scope.cancel = function() {
+		$scope.getVal = function (arr, val) {
+    		for (i in arr) {
+    			if(arr[i].name == val) {
+    				return arr[i].value;
+    			}
+    		}
+    		return null;
+    	}
+		function getEmployees() {
+		 	Employee.list().then(function(data){
+		 		employeesMain = employeesCopy = data;
+				$scope.employees = employeesCopy;
+			}, function(){
+				//failure handler
+			});
+		 }
+	}]);
+
+employeePortalControllers.controller('EmployeeDetailContrl',['$scope', 'Employee','$location','$routeParams',
+	 function($scope,Employee,$location,$routeParams)	{
+	 	$scope.isValid = true;
+	 	$scope.employee = ($routeParams.eid == null) ? initEmp() : getDetail($routeParams.eid); 
+	 	
+	 	$scope.cancel = function() {
 			$location.path('/manage');
 		}
+
 		$scope.save = function(employee) {
 			Employee.save(employee).then(function(data){
 		 		//success
@@ -55,30 +73,13 @@ employeePortalControllers.controller('EmployeeListContrl',['$scope', 'Employee',
 			$scope.isValid = validate(nEmployee);
 			if($scope.isValid) {
 				Employee.add(nEmployee).then(function(data){
-					getEmployees();
+					
 				}, function(){
 
 				});
 				$location.path('/manage');
 			}
 		}
-
-		$scope.getVal = function (arr, val) {
-    		for (i in arr) {
-    			if(arr[i].name == val) {
-    				return arr[i].value;
-    			}
-    		}
-    		return null;
-    	}
-		function getEmployees() {
-		 	Employee.list().then(function(data){
-		 		employeesMain = employeesCopy = data;
-				$scope.employees = employeesCopy;
-			}, function(){
-				//failure handler
-			});
-		 }
 
 		 function getDetail(eid) {
 			 for (i in employeesCopy) {
@@ -93,6 +94,7 @@ employeePortalControllers.controller('EmployeeListContrl',['$scope', 'Employee',
     	function validate(employee) {
     		return employee.name.length > 0;
     	}
+
     	function initEmp() {
     		var emp = {};
     		emp = {
@@ -164,6 +166,5 @@ employeePortalControllers.controller('EmployeeListContrl',['$scope', 'Employee',
 	return emp;
     	}
 
-
-	}]);
+	 }]);
 
