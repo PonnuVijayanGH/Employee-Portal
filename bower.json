@@ -7,13 +7,6 @@
   "main": "index.html",
   "license": "MIT",
   "private": true,
-  "ignore": [
-    "**/.*",
-    "node_modules",
-    "bower_components",
-    "test",
-    "tests"
-  ],
   "dependencies": {
     "alertify.js": "~0.3.11"
   }
